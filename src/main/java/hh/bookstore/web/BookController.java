@@ -19,4 +19,10 @@ public class BookController {
         model.addAttribute("welcomeMessage", "Welcome to the Bookstore!");
         return "index";
     }
+
+    @GetMapping("/booklist")
+    public String bookList(Model model) {
+        model.addAttribute("books", repository.findAll());
+        return "booklist";
+    }
 }
