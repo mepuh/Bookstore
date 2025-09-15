@@ -46,4 +46,17 @@ public class BookController {
         repository.deleteById(id);
         return "redirect:/booklist";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editBookForm(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("book", repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id)));
+        return "editbook";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editBook(@PathVariable("id") Long id, Book book) {
+        book.setId(id);
+        repository.save(book);
+        return "redirect:/booklist";
+    }
 }
