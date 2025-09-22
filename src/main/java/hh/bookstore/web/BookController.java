@@ -1,5 +1,6 @@
 package hh.bookstore.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,14 +9,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import hh.bookstore.domain.Book;
 import hh.bookstore.domain.BookRepository;
+import hh.bookstore.domain.CategoryRepository;
 
 @Controller
 public class BookController {
+    @Autowired
     private BookRepository repository;
 
     public BookController(BookRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @GetMapping("/index")
     public String welcomeMessage(Model model) {
@@ -32,6 +38,7 @@ public class BookController {
     @GetMapping("/addbook")
     public String addBookForm(Model model) {
         model.addAttribute("book", new Book());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addbook";
     }
 
@@ -50,6 +57,7 @@ public class BookController {
     @GetMapping("/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("book", repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id)));
+        model.addAttribute("categories", categoryRepository.findAll());
         return "editbook";
     }
 
